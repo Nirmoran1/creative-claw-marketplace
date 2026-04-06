@@ -1,7 +1,7 @@
 # GPT Image 1.5
 
-**Model ID:** `fal-ai/gpt-image-1.5`
-**Edit Model ID:** `fal-ai/gpt-image-1.5/edit`
+**Model ID:** `image/gpt-image`
+**Edit Model:** Use `generate_image` with `image_url` parameter
 
 OpenAI's latest image generation model (released December 2025). Up to 4x faster than its predecessor with significantly improved prompt adherence, text rendering, and editing precision. Uses a language-model backbone (not diffusion), so it understands natural language context, world knowledge, and spatial relationships natively.
 
@@ -93,7 +93,7 @@ Always put text you want rendered in `"double quotes"` with typography specifica
 
 ## Editing Workflow
 
-The edit model (`fal-ai/gpt-image-1.5/edit`) supports targeted edits with strong identity and composition preservation.
+To edit an image, call `generate_image` with `image_url` and `model: "image/gpt-image"`. Supports targeted edits with strong identity and composition preservation.
 
 ### Identity Preservation (Critical)
 

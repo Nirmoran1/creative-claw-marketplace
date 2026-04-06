@@ -1,6 +1,6 @@
 # Recraft V3
 
-**Model ID:** `fal-ai/recraft/v3/text-to-image`
+**Model ID:** `image/recraft-v3`
 
 Recraft V3 is a design-first image generation model that ranked #1 on Hugging Face's Text-to-Image Leaderboard (ELO 1172). Unlike photorealism-focused competitors, it excels at graphic design, illustration, and vector work. It produces clean, intentional outputs ideal for branding, UI assets, icons, posters, and styled artwork. It also has strong text rendering capabilities, supporting long text passages with precise positioning.
 

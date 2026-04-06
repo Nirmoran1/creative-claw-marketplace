@@ -1,9 +1,10 @@
 # Veo 3.1 (Google)
 
-**Text-to-Video Model ID:** `fal-ai/veo3.1`
-**Fast variant:** `fal-ai/veo3.1/fast`
-**Image-to-Video Model ID:** `fal-ai/veo3.1/image-to-video`
-**Fast I2V variant:** `fal-ai/veo3.1/fast/image-to-video`
+**Model ID:** `video/veo-3.1`
+**Fast variant:** `video/veo-3.1-fast`
+**Lite variant:** `video/veo-3.1-lite`
+**Image-to-Video:** Pass `image_url` parameter
+**First/Last Frame:** Check `get_model_params` for first/last frame support via `extras`
 
 Google's best video generation model. Up to 4K resolution at 24 FPS with native synchronized audio including dialogue, sound effects, and ambient sound -- all generated directly from the prompt.
 
@@ -141,7 +142,7 @@ Yes -- use the `/image-to-video` variants. Pass `image_url` to animate a referen
 
 ## Production Workflow
 
-1. Start with **`fal-ai/veo3.1/fast`** at **4s, 720p** for rapid prompt iteration
+1. Start with **`video/veo-3.1-fast`** at **4s, 720p** for rapid prompt iteration
 2. Refine the prompt until visuals and audio match your intent
 3. Scale up to **8s, 1080p** (or 4K) on the fast variant for production output
 4. Switch to **standard variant** only for final hero content where maximum fidelity matters

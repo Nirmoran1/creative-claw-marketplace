@@ -1,6 +1,6 @@
 # FLUX.1 [schnell]
 
-**Model ID:** `fal-ai/flux/schnell`
+**Model ID:** `image/flux-schnell`
 
 Black Forest Labs' fastest image generation model. A 12-billion-parameter rectified flow transformer trained with latent adversarial diffusion distillation, generating high-quality images in only 1-4 inference steps. "Schnell" means "fast" in German -- and it delivers, producing images in roughly 0.5 seconds at the lowest cost of any model on the platform.
 

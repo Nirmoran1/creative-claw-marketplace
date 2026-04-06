@@ -1,7 +1,7 @@
 # MiniMax Hailuo-02 Pro
 
-**Text-to-Video Model ID:** `fal-ai/minimax/hailuo-02/pro/text-to-video`
-**Image-to-Video Model ID:** `fal-ai/minimax/hailuo-02/pro/image-to-video`
+**Model ID:** `video/hailuo-02-pro`
+**Image-to-Video:** Pass `image_url` parameter
 
 MiniMax's flagship video generation model. Built on a Noise-aware Compute Redistribution (NCR) framework with 3x more parameters and 4x more training data than its predecessor. Scores 92.1 overall and 94/100 on physics on the Artificial Analysis benchmark, making it one of the most physically accurate AI video models available.
 
@@ -15,7 +15,7 @@ MiniMax's flagship video generation model. Built on a Noise-aware Compute Redist
 
 ## Supports Image Input
 
-Yes — use `fal-ai/minimax/hailuo-02/pro/image-to-video`. Pass `image_url` to animate a reference image. Optionally pass `end_image_url` to define the final frame, giving precise control over the motion arc.
+Yes — use `video/hailuo-02-pro` with `image_url` to animate a reference image. Optionally pass `end_image_url` via `extras` to define the final frame, giving precise control over the motion arc.
 
 ## Physics Simulation
 
@@ -87,14 +87,14 @@ The `prompt_optimizer` parameter (default: `true`) automatically enhances your p
 
 ## Parameters
 
-### Text-to-Video (`fal-ai/minimax/hailuo-02/pro/text-to-video`)
+### Text-to-Video (`video/hailuo-02-pro`)
 
 | Parameter | Type | Required | Default | Notes |
 |---|---|---|---|---|
 | **prompt** | string | Yes | — | Max 1500 characters. Supports `[camera]` bracket syntax |
 | **prompt_optimizer** | boolean | No | true | Auto-enhances prompt for better output |
 
-### Image-to-Video (`fal-ai/minimax/hailuo-02/pro/image-to-video`)
+### Image-to-Video (`video/hailuo-02-pro` with `image_url`)
 
 | Parameter | Type | Required | Default | Notes |
 |---|---|---|---|---|

@@ -1,7 +1,7 @@
 # Nano Banana Pro (Gemini 3 Pro Image)
 
-**Model ID:** `fal-ai/nano-banana-pro`
-**Edit Model ID:** `fal-ai/nano-banana-pro/edit`
+**Model ID:** `image/nano-banana-pro`
+**Edit Model:** Use `generate_image` with `image_url` parameter
 
 Google's Gemini 3 Pro image generation model, released November 2025. The highest-quality model in the Gemini family, built for complex reasoning and high-fidelity output. Uses a "Thinking" process that reasons through prompts before generating, producing intermediate thought images (not charged) before the final output. All outputs embed Google's imperceptible SynthID digital watermark.
 
@@ -47,6 +47,27 @@ Use photographer's language for precise control:
 - Specify lighting: "soft diffused window light", "dramatic rim lighting", "golden hour backlight", "three-point softbox setup"
 - Specify lens: "shot on 85mm f/1.4", "macro lens close-up", "wide-angle 24mm"
 - Specify mood: "high-key ethereal", "low-key moody", "studio lit on white seamless"
+- Film stocks: "Kodak Portra 400", "Fuji Velvia" trigger era-appropriate rendering
+- Era grounding: "1960s aesthetic" automatically triggers film grain, desaturation, and period-accurate composition
+
+### Artistic Styles
+
+For non-photographic styles, be explicit about the medium:
+- "watercolor painting with soft bleeding edges and paper texture"
+- "Japanese flat illustration"
+- "3D rendering with subsurface scattering"
+- "pixel art with limited color palette"
+- "oil painting with visible brushstrokes"
+- "graphic novel style with heavy inking"
+
+### Handling Unwanted Elements (No Negative Prompts)
+
+Nano Banana Pro does **not** support traditional negative prompts. Use positive framing instead — describe the desired scene so precisely that undesired elements are implicitly excluded:
+
+- Instead of "no blur" → write "crisp sharp focus throughout the frame"
+- Instead of "no people in background" → write "empty street" or "deserted plaza"
+- Instead of "no watermarks" → write "clean pristine image"
+- Avoid contradictions in prompts — don't combine "minimal white background" with "dense complex background details"
 
 ## Text Rendering
 
@@ -80,6 +101,10 @@ Always put text you want rendered in `"double quotes"` with individual style spe
 | **Web Search** | enable_web_search | Adds $0.015/gen. Use for real-world subjects and data visualizations only |
 | **Seed** | any integer | For reproducible generations |
 | **Sync Mode** | true/false | Default: false. Returns data URI if true |
+
+### Cost Optimization Strategy
+
+Generate 4 variations at 1K resolution, select the best, then regenerate the winner at 2K/4K. This avoids wasting 4K credits on iterations.
 
 ## Advanced Capabilities
 
@@ -117,7 +142,7 @@ Upload sketches, wireframes, or grids to control layout and composition. Perfect
 
 ## Editing Workflow
 
-The edit model (`fal-ai/nano-banana-pro/edit`) requires no masking. Describe edits in plain English.
+To edit an image, call `generate_image` with `image_url` and `model: "image/nano-banana-pro"`. No masking required — describe edits in plain English.
 
 - **Background change:** "Change the background to a sunset beach. Keep the person exactly as they are."
 - **Object removal:** "Remove the car from the left side and fill in naturally with the surrounding grass."

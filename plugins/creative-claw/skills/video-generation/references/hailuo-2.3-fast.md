@@ -1,13 +1,12 @@
 # MiniMax Hailuo 2.3 Fast
 
-**Standard Model ID:** `fal-ai/minimax/hailuo-2.3-fast/standard/image-to-video`
-**Pro Model ID:** `fal-ai/minimax/hailuo-2.3-fast/pro/image-to-video`
+**Model ID:** `video/hailuo-2.3-fast`
 
 MiniMax's fastest and cheapest video model in the Hailuo 2.3 family. An image-to-video model that animates a source image into a 6- or 10-second clip at up to 50% lower cost than the standard Hailuo 2.3. Built on the same architecture as Hailuo 2.3 (enhanced physics, micro-expressions, stylization) but optimized for speed and batch efficiency.
 
 ## Supports Image Input
 
-Yes -- this is an **image-to-video only** model. It requires an input image as the first frame. For text-to-video, use `fal-ai/minimax/hailuo-2.3/standard/text-to-video` or `fal-ai/minimax/hailuo-2.3/pro/text-to-video` instead.
+Yes -- supports both text-to-video and image-to-video. Pass `image_url` to animate from a reference image.
 
 ## Key Strengths
 

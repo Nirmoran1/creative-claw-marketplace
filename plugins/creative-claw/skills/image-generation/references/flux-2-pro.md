@@ -1,6 +1,6 @@
 # FLUX.2 Pro
 
-**Model ID:** `fal-ai/flux-2-pro`
+**Model ID:** `image/flux-2-pro`
 
 Black Forest Labs' professional-grade image generation model built on a 32-billion parameter architecture (nearly 3x FLUX.1's 12B). Combines a Mistral-3 24B vision-language model with a rectified flow transformer for direct text-to-image mapping. Zero-config quality -- produces great results without parameter tuning, 6x faster than FLUX.1 Pro.
 

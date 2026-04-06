@@ -1,7 +1,7 @@
 # Sora 2 Pro (OpenAI)
 
-**Text-to-Video Model ID:** `fal-ai/sora-2/text-to-video/pro`
-**Image-to-Video Model ID:** `fal-ai/sora-2/image-to-video/pro`
+**Model ID:** `video/sora-2-pro`
+**Image-to-Video:** Pass `image_url` parameter
 
 OpenAI's Sora 2 Pro. Generates up to 20 seconds of video per clip with native audio, character ID consistency across clips, and strong cinematic understanding. Treats prompts like storyboard directions -- detailed, video-centric prompts significantly outperform simple inputs.
 
@@ -104,7 +104,7 @@ Instead of "brightly lit room," specify the full setup:
 
 ## Supports Image Input
 
-Yes -- use `fal-ai/sora-2/image-to-video/pro`. Pass `image_url` (publicly accessible URL or base64 data URI) to anchor the first frame. The text prompt then defines subsequent action. The image should match your target resolution for best results. Supports JPEG, PNG, and WebP.
+Yes -- use `video/sora-2-pro` with `image_url` (publicly accessible URL or base64 data URI) to anchor the first frame. The text prompt then defines subsequent action. The image should match your target resolution for best results. Supports JPEG, PNG, and WebP.
 
 ## Character IDs
 

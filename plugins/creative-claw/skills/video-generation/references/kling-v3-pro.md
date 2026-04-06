@@ -1,7 +1,7 @@
 # Kling v3 Pro
 
-**Text-to-Video Model ID:** `fal-ai/kling-video/v3/pro/text-to-video`
-**Image-to-Video Model ID:** `fal-ai/kling-video/v3/pro/image-to-video`
+**Model ID:** `video/kling-v3-pro`
+**Image-to-Video:** Pass `image_url` parameter
 
 Kling's v3 Pro model (launched February 2026). Cinematic video generation with native multi-shot sequencing, dialogue with lip-sync, and up to 15-second narrative clips. Think of it as a virtual Director of Photography -- it understands cinematic language, physics, and audio direction natively.
 
@@ -17,7 +17,7 @@ Kling's v3 Pro model (launched February 2026). Cinematic video generation with n
 
 ## Supports Image Input
 
-Yes -- use `fal-ai/kling-video/v3/pro/image-to-video`. Pass `start_image_url` to animate from a reference image. Optionally pass `end_image_url` to define the final frame, creating controlled A-to-B transitions.
+Yes -- use `video/kling-v3-pro` with `image_url` to animate from a reference image. Optionally pass `end_image_url` via `extras` to define the final frame, creating controlled A-to-B transitions.
 
 Treat the input image as an anchor. Focus the prompt on how the scene evolves from that image: subtle movements, camera motion, or environmental changes. The model preserves text, signage, and visual details from the original image.
 
