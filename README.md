@@ -24,7 +24,7 @@ One connection to Creative Claw's MCP server gives you 18+ tools for media gener
 | **Assets** | `search_assets`, `update_asset`, `upload_asset`, `delete_asset`, `confirm_upload`, `get_upload_url` |
 | **Branding** | `get_theme`, `list_themes`, `update_theme`, `delete_theme` |
 
-Access 1,000+ production-ready AI models — FLUX, Gemini, Veo, Sora, Kling, Hailuo, Recraft, ElevenLabs, and more — through a single unified account with usage-based pricing.
+Access 1,000+ production-ready AI models — FLUX, Gemini, Veo, Sora, Kling, Seedance, Hailuo, HeyGen, Recraft, ElevenLabs, and more — through a single unified account with usage-based pricing.
 
 ### Skills (Creative Workflows)
 
@@ -33,7 +33,8 @@ Skills are prompt-based workflows that teach Claude *how* to use the tools effec
 | Skill | What It Does |
 |---|---|
 | **image-generation** | Helps you pick the right model, craft effective prompts, and generate or edit images. Covers 6 recommended models with detailed reference guides. |
-| **video-generation** | Guides you through model selection, reference image generation, camera direction, and multi-segment video production. Covers 5 recommended models with detailed reference guides. |
+| **video-generation** | Guides you through model selection, reference image generation, camera direction, multi-segment video production, and talking avatars. Covers 9 recommended models with detailed reference guides. |
+| **brand-theme** | Manages brand themes — save logos, colors, fonts, and style preferences. Extract brand elements from websites. Themes are used by image and video skills for consistent branding. |
 
 Each skill includes per-model reference files with prompting best practices, parameter tables, example prompts, and comparison guidance.
 
@@ -69,8 +70,17 @@ Each skill includes per-model reference files with prompting best practices, par
 | Veo 3.1 Fast | `fal-ai/veo3.1/fast` | Native dialogue + SFX | Yes (`/fast/image-to-video`) |
 | Sora 2 Pro | `fal-ai/sora-2/text-to-video/pro` | Native audio | Yes (`/image-to-video/pro`) |
 | Kling v3 Pro | `fal-ai/kling-video/v3/pro/text-to-video` | Native audio + lip-sync | Yes (`/image-to-video`) |
+| Seedance 2.0 | `fal-ai/bytedance/seedance-2.0/text-to-video` | Native audio | Yes (`/image-to-video`) |
+| Seedance 2.0 Fast | `fal-ai/bytedance/seedance-2.0/fast/text-to-video` | Native audio | Yes (`/image-to-video`) |
 | Hailuo-02 Pro | `fal-ai/minimax/hailuo-02/pro/text-to-video` | Yes | Yes (`/image-to-video`) |
 | Hailuo 2.3 Fast | `fal-ai/minimax/hailuo-2.3-fast/standard/image-to-video` | No | Yes (I2V only) |
+
+### Talking Avatars
+
+| Model | ID | Highlights |
+|---|---|---|
+| HeyGen Avatar 4 | `fal-ai/heygen/avatar4/image-to-video` | Photo → talking avatar with lip-sync, 400+ poses, 100+ voices |
+| HeyGen Video Agent | `fal-ai/heygen/v2/video-agent` | Budget talking avatar from text (~$2/min) |
 
 These are our top picks. Use `list_models` to browse 100+ more across all categories.
 
@@ -176,8 +186,12 @@ plugins/
           veo-3.1.md
           sora-2-pro.md
           kling-v3-pro.md
+          seedance-2.0.md
           hailuo-02-pro.md
           hailuo-2.3-fast.md
+          heygen-avatar-4.md
+      brand-theme/
+        skill.md           # Brand theme management workflow
 ```
 
 ---
