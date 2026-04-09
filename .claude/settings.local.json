@@ -1,0 +1,7 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__plugin_creative-claw_Creative_Claw__check_job"
+    ]
+  }
+}
