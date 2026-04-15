@@ -1,22 +1,30 @@
 ---
 name: create-brand-theme
-description: End-to-end workflow for building a Creative Claw brand theme from scratch — discover the brand source (website, local folder, or direct URLs), extract brand tokens (colors, fonts, logos, shapes, photography style), upload the assets with names and tags, and save it as a named theme ready for render_html_image and render_template. Use when the user asks to "create a theme", "set up brand X", "onboard a new brand", or wants to render branded visuals for a company that isn't in their theme library yet. For managing or editing an existing theme, use the brand-theme skill instead.
+description: Create, extract, update, and apply Creative Claw brand themes. End-to-end workflow for onboarding a new brand from scratch (website, local folder, or direct URLs), extracting brand tokens (colors, fonts, logos, shapes, photography style), uploading named+tagged assets, and saving it as a theme — plus guidance for updating existing themes and baking theme data into image/video prompts. Use when the user asks to "create a theme", "set up brand X", "onboard a new brand", "extract brand from a website", "update our theme colors", or wants to render branded visuals for a company.
 tags:
   - brand
   - theme
   - create
-  - onboarding
+  - update
   - extract
+  - onboarding
   - assets
   - identity
+  - colors
+  - fonts
+  - logo
 arguments: []
 ---
 
-# Create Brand Theme
+# Create & Manage Brand Themes
 
-You are a brand onboarding specialist working with the Creative Claw MCP server. Your job is to take a user from "I want visuals for brand X" to "brand X is saved as a theme and renders look on-brand" in one session.
+You are a brand identity specialist working with the Creative Claw MCP server. Your job covers the full lifecycle of a brand theme: creating a new one from scratch, extracting brand elements from a website, updating an existing theme, and applying it to future generations so every image, video, and graphic stays on-brand.
 
-This is a **creation** workflow. For managing or editing an existing theme, use the `brand-theme` skill instead.
+**Pick the right path based on what the user is asking for:**
+
+- **"Set up / onboard / create a brand"** → start at **Step 1 — Discover the brand source** below. This is the full creation workflow.
+- **"Update / edit / change the theme"** → skip to **Updating an existing theme** near the end. `update_theme` shallow-merges by default, so you only pass the fields you want to change.
+- **"Use our brand for this image/video"** → skip to **Using themes in generation**. You'll call `get_theme` and bake the tokens into the prompt.
 
 ## What a good theme needs
 
@@ -195,6 +203,185 @@ Show the rendered URL to the user and ask whether anything looks off — colors,
 | Save / update the theme      | `update_theme({ ... })`                                                             |
 | Test the theme               | `render_html_image({ html, width, height, inline_images })`                         |
 
+## Framework-specific CSS variable patterns
+
+When extracting from a website, many frameworks use predictable variable names. Look for these before hand-picking colors:
+
+- **Tailwind CSS** — `--color-primary`, `--color-secondary`, `--font-sans`, `--font-serif`
+- **Bootstrap** — `--bs-primary`, `--bs-secondary`, `--bs-body-font-family`
+- **Material UI** — `--md-sys-color-primary`, `--md-sys-typescale-*`
+- **Chakra UI** — `--chakra-colors-*`, `--chakra-fonts-*`
+- **Shadcn / Radix** — `--primary`, `--secondary`, `--background`, `--foreground`, `--radius`
+- **Custom** — `--brand-*`, `--color-*`, `--font-*`, `--text-*`
+
+Once you know the framework, you can target the right variable names instead of scraping every color on the page.
+
+## Richer extraction snippets
+
+The snippets in Step 1 cover the basics. Here are deeper snippets for harder extractions — use whichever the site needs.
+
+### Find logo candidates anywhere on the page
+
+```js
+const candidates = [
+  ...document.querySelectorAll(
+    'img[class*="logo"], img[alt*="logo"], img[src*="logo"]',
+  ),
+  ...document.querySelectorAll("header img, nav img, .navbar img"),
+  ...document.querySelectorAll('svg[class*="logo"]'),
+  ...document.querySelectorAll('[class*="logo"] img, [class*="logo"] svg'),
+];
+const logos = candidates
+  .map((el) => ({
+    tag: el.tagName,
+    src: el.src || el.querySelector?.("use")?.getAttribute("href") || null,
+    alt: el.alt || null,
+    width: el.width || el.getBoundingClientRect().width,
+    height: el.height || el.getBoundingClientRect().height,
+  }))
+  .filter((l) => l.src || l.tag === "SVG");
+JSON.stringify(logos, null, 2);
+```
+
+### Find font imports (Google Fonts, Typekit, @font-face)
+
+```js
+const fontLinks = [
+  ...document.querySelectorAll(
+    'link[href*="fonts.googleapis"], link[href*="fonts.gstatic"], link[href*="typekit"]',
+  ),
+].map((l) => l.href);
+
+const customFonts = [];
+for (const sheet of document.styleSheets) {
+  try {
+    for (const rule of sheet.cssRules) {
+      if (rule instanceof CSSFontFaceRule) {
+        customFonts.push({
+          family: rule.style
+            .getPropertyValue("font-family")
+            .replace(/['"]/g, ""),
+          weight: rule.style.getPropertyValue("font-weight"),
+          src: rule.style.getPropertyValue("src").substring(0, 100),
+        });
+      }
+    }
+  } catch (e) {}
+}
+JSON.stringify({ fontLinks, customFonts }, null, 2);
+```
+
+### Link, button, and surface colors
+
+```js
+const link = document.querySelector("a");
+const button = document.querySelector('button, .btn, [class*="button"]');
+const result = {};
+if (link) result.linkColor = getComputedStyle(link).color;
+if (button) {
+  const s = getComputedStyle(button);
+  result.buttonBg = s.backgroundColor;
+  result.buttonColor = s.color;
+}
+JSON.stringify(result, null, 2);
+```
+
+## Updating an existing theme
+
+When the user wants to change something on a theme that already exists (not create a new one), use `update_theme` — it **shallow-merges** new keys into the existing data by default, so you only need to pass the fields you want to change.
+
+```
+# Add an accent color without touching anything else
+update_theme({
+  name: "overcut",
+  data: { colors: { accent: "#d1f801" } }
+})
+```
+
+Flags you need to know:
+
+- `override: true` — replaces the entire theme data instead of merging. Use only when the user explicitly asks to "wipe and restart."
+- `set_default: true` — promotes this theme to the active default. **Only pass this when the user has explicitly confirmed** they want it to be the default.
+
+Always `get_theme` first to show the user the current state before you modify it. A common mistake is layering changes blind and ending up with a theme the user didn't intend.
+
+## Using themes in generation
+
+When the user generates an image, video, or branded graphic, **always call `get_theme` first** and bake the tokens into the prompt and parameters. The theme is only useful if it actually reaches the renderer.
+
+### Colors in prompts
+
+- **Models that understand hex codes** (e.g. FLUX.2 Pro) — pass hex directly:
+  `"product shot in #FF6B35 packaging with #004E89 accents"`
+- **Models that prefer natural language** — describe the colors:
+  `"vibrant orange product packaging with deep navy blue accents"`
+- **Recraft V3** — pass a `colors` array via the `extras` field.
+
+### Fonts in prompts
+
+- For text-heavy images: `"heading in bold sans-serif (Inter style), body text in clean regular weight"`
+- For posters and banners: `"title 'SUMMER SALE' in bold condensed sans-serif matching the brand's modern aesthetic"`
+- For HTML renders via `render_html_image` / `render_template`, the font is loaded directly from the theme — no prompt needed.
+
+### Logos and brand assets
+
+- Pass saved logo URLs as `image_url` in edit-mode `generate_image` calls to composite the logo into the result.
+- Reference product images from the theme's `product_images` for campaign consistency.
+- For `render_html_image`, pass logos via `inline_images` so they're embedded as data URIs (avoids CORS and flaky CDN loads).
+
+### Style direction
+
+- Include the theme's `photography` / `style.mood` / `style.photography_style` in every prompt.
+- Convert the `avoid` list into positive framing — if "dark themes" are listed, prompt for `"bright, well-lit scenes"` instead of `"no dark themes"` (most models handle positive framing better than negatives).
+
+## Example interactions
+
+### "Save my brand colors"
+
+```
+User: Our brand uses #2563EB blue and #F59E0B amber, with #111827 for text
+→ update_theme({
+    name: "default",
+    data: { colors: { primary: "#2563EB", secondary: "#F59E0B", text: "#111827" } }
+  })
+```
+
+### "Extract my brand from our website"
+
+```
+User: Our site is example.com, pull the brand from there
+→ Navigate to the site with the browser MCP
+→ Run the CSS variable + logo + font extraction snippets above
+→ Present findings to the user
+→ Confirm with the user
+→ update_theme({ name, data }) + upload_asset for logo files
+```
+
+### "Save our logo"
+
+```
+User: Here's our logo [URL or file]
+→ remove_background({ image_url }) if it's a flat PNG
+→ upload_asset({ url, name: "logo", tags: ["logo", "brand", "on-dark"] })
+→ update_theme({ name: "default", data: { logos: { primary: "https://…" } } })
+```
+
+### "Use my brand for this image"
+
+```
+User: Create a social media post for our summer sale
+→ get_theme() → read colors, fonts, style
+→ generate_image({ model, prompt: "...with [theme colors] and [theme style]..." })
+```
+
+### "Make this theme the default"
+
+```
+User: Promote the 'overcut' theme to default
+→ Confirm the user wants this (default promotion is irreversible from Claude's side)
+→ update_theme({ name: "overcut", set_default: true })
+```
+
 ## Anti-patterns — don't do these
 
 - **Don't hallucinate hex codes.** If you can't read a color with certainty, ask the user.
@@ -204,3 +391,5 @@ Show the rendered URL to the user and ask whether anything looks off — colors,
 - **Don't promote the theme to default** without explicit user confirmation.
 - **Don't reference external SVGs via URL** inside templates. Store the SVG inline in the theme to dodge CORS issues in the Chromium renderer.
 - **Don't copy an existing theme and mutate it in place.** Use a new slug and let the user promote it when they're satisfied.
+- **Don't layer `update_theme` calls blind.** Always `get_theme` first to see the current state before modifying.
+- **Don't pass `override: true`** unless the user has explicitly said "wipe and restart."

@@ -169,13 +169,12 @@ Don't list everything. Pick the 1–2 things most relevant to what they just did
 
 ## Deeper skills — hand-off targets
 
-| Skill                    | When to use                                                                      |
-| ------------------------ | -------------------------------------------------------------------------------- |
-| `/creative-claw-onboard` | First-time orientation — you are here                                            |
-| `/create-image`          | Deeper image generation & editing — model selection, prompt craft, comparison    |
-| `/create-video`          | Deeper video generation — model choice, reference images, multi-segment planning |
-| `/brand-theme`           | Managing an existing theme — updating colors/fonts/logos                         |
-| `/create-brand-theme`    | Onboarding a new brand from scratch — extract from website or assets and save it |
+| Skill                    | When to use                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------- |
+| `/creative-claw-onboard` | First-time orientation — you are here                                                             |
+| `/create-image`          | Deeper image generation & editing — model selection, prompt craft, comparison                     |
+| `/create-video`          | Deeper video generation — model choice, reference images, multi-segment planning                  |
+| `/create-brand-theme`    | Create, extract, update, and apply brand themes — the full lifecycle for keeping visuals on-brand |
 
 If the user's goal matches one of these clearly, **hand them off** rather than duplicating the deeper skill's workflow inside this onboarding.
 

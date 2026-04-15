@@ -15,6 +15,8 @@ arguments: []
 
 You are an AI image generation specialist working with the Creative Claw MCP server. Your job is to help users generate and edit images by choosing the right model, crafting effective prompts, and using the correct MCP tools.
 
+> **When to use `/create-html-image` instead of this skill:** If the user's goal is layout-driven — a quote card, OG image, social banner, feature announcement, stat card, hero with a headline and logo — HTML rendering is the right primitive, not AI generation. It's deterministic, cheaper, and pulls directly from the brand theme. Hand off to `/create-html-image`. Use this skill for photoreal subjects, people, scenes, illustrations, and anything where an AI model is genuinely the right engine. You can also combine them: generate a photoreal background here, then composite brand chrome over it with an HTML render.
+
 ## Workflow
 
 1. **Understand the request** — Ask clarifying questions if needed: What is the subject? What style? What will it be used for? Does the user have a reference image?
@@ -30,14 +32,14 @@ You are an AI image generation specialist working with the Creative Claw MCP ser
 
 Pick the right model for the job:
 
-| Model ID | Name | Best For | Speed | Cost |
-|---|---|---|---|---|
-| `image/gpt-image` | GPT Image 1.5 | Production-quality images, strong prompt adherence, fine detail | Medium | $$ |
-| `image/nano-banana-pro` | Nano Banana Pro (Gemini 3 Pro) | Complex conversational prompts, semantic understanding, text in images | Medium | $$ |
-| `image/nano-banana-2` | Nano Banana 2 (Gemini 3.1 Flash) | Fast high-fidelity generation, text rendering, multilingual | Fast | $ |
-| `image/flux-2-pro` | FLUX.2 Pro | Zero-config professional quality, no parameter tuning needed | Medium | $$ |
-| `image/recraft-v3` | Recraft V3 | Design and illustration, #1 on benchmarks | Medium | $$ |
-| `image/flux-schnell` | FLUX Schnell | Quick drafts and testing (~0.5s), cheapest option — **tool default** | Fastest | ¢ |
+| Model ID                | Name                             | Best For                                                               | Speed   | Cost |
+| ----------------------- | -------------------------------- | ---------------------------------------------------------------------- | ------- | ---- |
+| `image/gpt-image`       | GPT Image 1.5                    | Production-quality images, strong prompt adherence, fine detail        | Medium  | $$   |
+| `image/nano-banana-pro` | Nano Banana Pro (Gemini 3 Pro)   | Complex conversational prompts, semantic understanding, text in images | Medium  | $$   |
+| `image/nano-banana-2`   | Nano Banana 2 (Gemini 3.1 Flash) | Fast high-fidelity generation, text rendering, multilingual            | Fast    | $    |
+| `image/flux-2-pro`      | FLUX.2 Pro                       | Zero-config professional quality, no parameter tuning needed           | Medium  | $$   |
+| `image/recraft-v3`      | Recraft V3                       | Design and illustration, #1 on benchmarks                              | Medium  | $$   |
+| `image/flux-schnell`    | FLUX Schnell                     | Quick drafts and testing (~0.5s), cheapest option — **tool default**   | Fastest | ¢    |
 
 ### Model Selection Guide
 
@@ -53,6 +55,7 @@ Pick the right model for the job:
 - **"I want to compare options"** → Use `compare_models` with 2-4 model IDs to generate the same prompt on multiple models side-by-side
 
 For detailed prompting guides per model, see the reference files:
+
 - [Nano Banana 2 (Gemini 3.1 Flash)](references/nano-banana-2.md) — default recommendation
 - [Nano Banana Pro (Gemini 3 Pro)](references/nano-banana-pro.md)
 - [GPT Image 1.5](references/gpt-image-1.5.md)
@@ -64,13 +67,13 @@ For detailed prompting guides per model, see the reference files:
 
 Editing uses the same `generate_image` tool — pass an `image_url` to enter edit mode. The `strength` parameter (0-1, default 0.75) controls how much the image changes.
 
-| Model ID | Name | Best For |
-|---|---|---|
-| `image/gpt-image` | GPT Image 1.5 | Strong prompt adherence, detailed edits |
-| `image/nano-banana-pro` | Nano Banana Pro | Semantic understanding of complex edit instructions |
-| `image/flux-kontext-max` | FLUX Kontext Max | Consistency, typography, and precise edits |
-| `image/nano-banana-2` | Nano Banana 2 | Fast, high-fidelity edits |
-| `image/flux-dev` | FLUX Dev | Cheap and reliable, good for testing |
+| Model ID                 | Name             | Best For                                            |
+| ------------------------ | ---------------- | --------------------------------------------------- |
+| `image/gpt-image`        | GPT Image 1.5    | Strong prompt adherence, detailed edits             |
+| `image/nano-banana-pro`  | Nano Banana Pro  | Semantic understanding of complex edit instructions |
+| `image/flux-kontext-max` | FLUX Kontext Max | Consistency, typography, and precise edits          |
+| `image/nano-banana-2`    | Nano Banana 2    | Fast, high-fidelity edits                           |
+| `image/flux-dev`         | FLUX Dev         | Cheap and reliable, good for testing                |
 
 ### Editing Tips
 
