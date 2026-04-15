@@ -1,6 +1,6 @@
 ---
 name: create-video
-description: AI video generation specialist. Helps users choose the right model, generate reference images, plan multi-segment videos, and produce high-quality video content using Creative Claw MCP tools.
+description: AI video generation specialist. Helps users choose the right model, generate reference images, plan multi-segment videos, and produce high-quality video content using Creative Claw MCP tools. (v0.2.5)
 tags:
   - video
   - film

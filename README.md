@@ -2,7 +2,7 @@
 
 **Generate on-brand media, inside Claude.**
 
-Creative Claw is an MCP plugin that brings a full AI media studio into Claude Code and Claude Desktop. Generate images, videos, speech, 3D models — all from natural language, all through one account. No API keys. No platform switching. Just describe what you need.
+Creative Claw is an MCP plugin that brings a full AI media studio into Claude Code and Claude Desktop. Generate on-brand images, videos, speech, and HTML-rendered branded graphics — all from natural language, all through one account. Save your brand once and every future visual stays on-brand automatically. No API keys. No platform switching. Just describe what you need.
 
 > [creativeclaw.co](https://creativeclaw.co) | [Join the Beta](https://creativeclaw.co)
 
@@ -12,31 +12,36 @@ Creative Claw is an MCP plugin that brings a full AI media studio into Claude Co
 
 ### MCP Server (auto-connected)
 
-One connection to Creative Claw's MCP server gives you 18+ tools for media generation, editing, and asset management:
+One connection to Creative Claw's MCP server gives you 30+ tools for media generation, editing, layout rendering, branding, and asset management:
 
-| Category | Tools |
-|---|---|
-| **Image** | `generate_image`, `edit_image`, `generate_image_variants`, `load_image` |
-| **Video** | `generate_video`, `check_video_job`, `remove_video_background` |
-| **Speech** | `generate_speech` |
-| **3D** | `generate_3d_model`, `check_3d_model_job` |
-| **Models** | `list_models`, `get_model_params` |
-| **Assets** | `search_assets`, `update_asset`, `upload_asset`, `delete_asset`, `confirm_upload`, `get_upload_url` |
-| **Branding** | `get_theme`, `list_themes`, `update_theme`, `delete_theme` |
+| Category          | Tools                                                                                                               |
+| ----------------- | ------------------------------------------------------------------------------------------------------------------- |
+| **Image**         | `generate_image` (generate + edit), `compare_models`, `load_image`                                                  |
+| **Video**         | `generate_video`, `check_job`                                                                                       |
+| **Speech**        | `generate_speech`                                                                                                   |
+| **HTML → media**  | `render_html_image`, `render_template`                                                                              |
+| **Media editing** | `remove_background`, `upscale_media`, `trim_video`, `scale_video`, `add_subtitles`, `extract_frames`, `merge_media` |
+| **Models**        | `list_models`, `get_model_params`                                                                                   |
+| **Assets**        | `search_assets`, `update_asset`, `delete_asset`, `upload_asset`, `import_media`, `get_upload_url`, `confirm_upload` |
+| **Brand themes**  | `get_theme`, `list_themes`, `update_theme`, `delete_theme`                                                          |
+| **Templates**     | `create_template`, `update_template`, `list_templates`, `render_template`                                           |
+| **Credits**       | `get_credits_balance`, `get_credits_link`                                                                           |
 
 Access 1,000+ production-ready AI models — FLUX, Gemini, Veo, Sora, Kling, Seedance, Hailuo, HeyGen, Recraft, ElevenLabs, and more — through a single unified account with usage-based pricing.
 
 ### Skills (Creative Workflows)
 
-Skills are prompt-based workflows that teach Claude *how* to use the tools effectively — model selection, prompt engineering, multi-step production pipelines.
+Skills are prompt-based workflows that teach Claude _how_ to use the tools effectively — model selection, prompt engineering, multi-step production pipelines, and brand-aware rendering.
 
-| Skill | What It Does |
-|---|---|
-| **image-generation** | Helps you pick the right model, craft effective prompts, and generate or edit images. Covers 6 recommended models with detailed reference guides. |
-| **video-generation** | Guides you through model selection, reference image generation, camera direction, multi-segment video production, and talking avatars. Covers 9 recommended models with detailed reference guides. |
-| **brand-theme** | Manages brand themes — save logos, colors, fonts, and style preferences. Extract brand elements from websites. Themes are used by image and video skills for consistent branding. |
+| Skill                     | What It Does                                                                                                                                                                                                                            |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **creative-claw-onboard** | First-time orientation. Explains the mission, tours the studio's capabilities, and walks new users through their first generation — images, videos, HTML renders, or voice.                                                             |
+| **create-image**          | Helps you pick the right model, craft effective prompts, and generate or edit images. Covers the full roster of recommended models with detailed reference guides.                                                                      |
+| **create-video**          | Guides you through model selection, reference image generation, camera direction, multi-segment video production, and talking avatars. Covers recommended video models with detailed reference guides.                                  |
+| **create-html-image**     | Render on-brand images from HTML/CSS via headless Chromium — quote cards, OG images, social banners, stat cards, hero layouts. Full browser CSS surface (grid, flex, filter, clip-path, variable fonts, inline SVG). Pulls from themes. |
+| **create-brand-theme**    | Create, extract, update, and apply brand themes. Onboards a new brand from a website, local folder, or direct URLs — saves colors, fonts, logos, shapes, and photography style as a reusable theme.                                     |
 
-Each skill includes per-model reference files with prompting best practices, parameter tables, example prompts, and comparison guidance.
+Each generation skill includes per-model reference files with prompting best practices, parameter tables, example prompts, and comparison guidance.
 
 ---
 
@@ -44,43 +49,43 @@ Each skill includes per-model reference files with prompting best practices, par
 
 ### Image Generation
 
-| Model | ID | Highlights |
-|---|---|---|
-| GPT Image 1.5 | `fal-ai/gpt-image-1.5` | Production-quality, strong prompt adherence, fine detail |
-| Gemini 3 Pro | `fal-ai/nano-banana-pro` | Complex reasoning, semantic understanding, text in images |
-| Gemini 3.1 Flash | `fal-ai/nano-banana-2` | Fast, high-fidelity, excellent text rendering, multilingual |
-| FLUX.2 Pro | `fal-ai/flux-2-pro` | Zero-config professional quality, HEX color precision |
-| Recraft V3 | `fal-ai/recraft/v3/text-to-image` | #1 on benchmarks, design and illustration |
-| FLUX Schnell | `fal-ai/flux/schnell` | Fastest (~0.5s), cheapest, great for drafts |
+| Model            | ID                                | Highlights                                                  |
+| ---------------- | --------------------------------- | ----------------------------------------------------------- |
+| GPT Image 1.5    | `fal-ai/gpt-image-1.5`            | Production-quality, strong prompt adherence, fine detail    |
+| Gemini 3 Pro     | `fal-ai/nano-banana-pro`          | Complex reasoning, semantic understanding, text in images   |
+| Gemini 3.1 Flash | `fal-ai/nano-banana-2`            | Fast, high-fidelity, excellent text rendering, multilingual |
+| FLUX.2 Pro       | `fal-ai/flux-2-pro`               | Zero-config professional quality, HEX color precision       |
+| Recraft V3       | `fal-ai/recraft/v3/text-to-image` | #1 on benchmarks, design and illustration                   |
+| FLUX Schnell     | `fal-ai/flux/schnell`             | Fastest (~0.5s), cheapest, great for drafts                 |
 
 ### Image Editing
 
-| Model | ID | Highlights |
-|---|---|---|
-| GPT Image 1.5 | `fal-ai/gpt-image-1.5/edit` | Strong prompt adherence, identity preservation |
-| Gemini 3 Pro | `fal-ai/nano-banana-pro/edit` | Semantic edit instructions, 14 reference images |
-| FLUX Kontext Max | `fal-ai/flux-pro/kontext/max` | Typography, consistency, precise edits |
-| Gemini 3.1 Flash | `fal-ai/nano-banana-2/edit` | Fast, no masking required |
+| Model            | ID                            | Highlights                                      |
+| ---------------- | ----------------------------- | ----------------------------------------------- |
+| GPT Image 1.5    | `fal-ai/gpt-image-1.5/edit`   | Strong prompt adherence, identity preservation  |
+| Gemini 3 Pro     | `fal-ai/nano-banana-pro/edit` | Semantic edit instructions, 14 reference images |
+| FLUX Kontext Max | `fal-ai/flux-pro/kontext/max` | Typography, consistency, precise edits          |
+| Gemini 3.1 Flash | `fal-ai/nano-banana-2/edit`   | Fast, no masking required                       |
 
 ### Video Generation
 
-| Model | ID | Audio | Image Input |
-|---|---|---|---|
-| Veo 3.1 | `fal-ai/veo3.1` | Native dialogue + SFX | Yes (`/image-to-video`) |
-| Veo 3.1 Fast | `fal-ai/veo3.1/fast` | Native dialogue + SFX | Yes (`/fast/image-to-video`) |
-| Sora 2 Pro | `fal-ai/sora-2/text-to-video/pro` | Native audio | Yes (`/image-to-video/pro`) |
-| Kling v3 Pro | `fal-ai/kling-video/v3/pro/text-to-video` | Native audio + lip-sync | Yes (`/image-to-video`) |
-| Seedance 2.0 | `fal-ai/bytedance/seedance-2.0/text-to-video` | Native audio | Yes (`/image-to-video`) |
-| Seedance 2.0 Fast | `fal-ai/bytedance/seedance-2.0/fast/text-to-video` | Native audio | Yes (`/image-to-video`) |
-| Hailuo-02 Pro | `fal-ai/minimax/hailuo-02/pro/text-to-video` | Yes | Yes (`/image-to-video`) |
-| Hailuo 2.3 Fast | `fal-ai/minimax/hailuo-2.3-fast/standard/image-to-video` | No | Yes (I2V only) |
+| Model             | ID                                                       | Audio                   | Image Input                  |
+| ----------------- | -------------------------------------------------------- | ----------------------- | ---------------------------- |
+| Veo 3.1           | `fal-ai/veo3.1`                                          | Native dialogue + SFX   | Yes (`/image-to-video`)      |
+| Veo 3.1 Fast      | `fal-ai/veo3.1/fast`                                     | Native dialogue + SFX   | Yes (`/fast/image-to-video`) |
+| Sora 2 Pro        | `fal-ai/sora-2/text-to-video/pro`                        | Native audio            | Yes (`/image-to-video/pro`)  |
+| Kling v3 Pro      | `fal-ai/kling-video/v3/pro/text-to-video`                | Native audio + lip-sync | Yes (`/image-to-video`)      |
+| Seedance 2.0      | `fal-ai/bytedance/seedance-2.0/text-to-video`            | Native audio            | Yes (`/image-to-video`)      |
+| Seedance 2.0 Fast | `fal-ai/bytedance/seedance-2.0/fast/text-to-video`       | Native audio            | Yes (`/image-to-video`)      |
+| Hailuo-02 Pro     | `fal-ai/minimax/hailuo-02/pro/text-to-video`             | Yes                     | Yes (`/image-to-video`)      |
+| Hailuo 2.3 Fast   | `fal-ai/minimax/hailuo-2.3-fast/standard/image-to-video` | No                      | Yes (I2V only)               |
 
 ### Talking Avatars
 
-| Model | ID | Highlights |
-|---|---|---|
-| HeyGen Avatar 4 | `fal-ai/heygen/avatar4/image-to-video` | Photo → talking avatar with lip-sync, 400+ poses, 100+ voices |
-| HeyGen Video Agent | `fal-ai/heygen/v2/video-agent` | Budget talking avatar from text (~$2/min) |
+| Model              | ID                                     | Highlights                                                    |
+| ------------------ | -------------------------------------- | ------------------------------------------------------------- |
+| HeyGen Avatar 4    | `fal-ai/heygen/avatar4/image-to-video` | Photo → talking avatar with lip-sync, 400+ poses, 100+ voices |
+| HeyGen Video Agent | `fal-ai/heygen/v2/video-agent`         | Budget talking avatar from text (~$2/min)                     |
 
 These are our top picks. Use `list_models` to browse 100+ more across all categories.
 
@@ -100,7 +105,7 @@ claude plugin install creative-claw@creative-claw-marketplace
 # 3. Authenticate — on first use, the MCP server will prompt you to sign in via Clerk OAuth
 ```
 
-That's it. The plugin connects to Creative Claw's MCP server and gives you access to all generation tools + the `/create-image` and `/create-video` skills.
+That's it. The plugin connects to Creative Claw's MCP server and gives you access to all generation tools plus the `/creative-claw-onboard`, `/create-image`, `/create-video`, `/create-html-image`, and `/create-brand-theme` skills.
 
 ### Claude Desktop
 
@@ -127,16 +132,22 @@ Just talk to Claude naturally:
 
 ```
 "Generate a product photo of my headphones on a marble surface, golden hour lighting"
-  -> image-generation skill picks the best model, crafts the prompt, generates
+  -> /create-image picks the best model, crafts the prompt, generates
 
 "Make a 15-second cinematic video of coffee being poured in slow motion"
-  -> video-generation skill recommends Hailuo-02 Pro for physics, generates reference image, then video
+  -> /create-video recommends the right model for physics, generates a reference image, then the video
 
 "Edit this image — change the background to a beach sunset, keep the person unchanged"
-  -> routes to an edit model, preserves identity, swaps background
+  -> /create-image routes to an edit model, preserves identity, swaps background
+
+"Make me a LinkedIn quote card with our brand colors"
+  -> /create-html-image writes the HTML, pulls colors/fonts/logo from the saved brand theme, renders via headless Chromium
+
+"Set up our brand — here's our website"
+  -> /create-brand-theme extracts colors/fonts/logos from the site, uploads the assets, saves as a reusable theme
 
 "I need a TikTok-style product video for this shoe" [attach image]
-  -> generates reference frames, picks an I2V model, produces the clip
+  -> /create-video generates reference frames, picks an I2V model, produces the clip
 ```
 
 ---
@@ -144,11 +155,11 @@ Just talk to Claude naturally:
 ## Architecture
 
 ```
-You -> Claude + Skills (model selection, prompt engineering, creative direction)
+You -> Claude + Skills (model selection, prompt engineering, creative direction, brand-aware rendering)
               |
-         MCP Tools (generate_image, generate_video, edit_image, ...)
+         MCP Tools (generate_image, generate_video, render_html_image, update_theme, ...)
               |
-       Creative Claw Server (fal.ai + R2 storage + Clerk auth)
+       Creative Claw Server (fal.ai + headless Chromium + R2 storage + Clerk auth)
               |
        Permanent media URLs (never expire)
 ```
@@ -171,27 +182,18 @@ plugins/
       plugin.json          # Plugin manifest (MCP server config)
     openclaw.plugin.json   # OpenClaw compatibility
     skills/
+      creative-claw-onboard/
+        SKILL.md           # /creative-claw-onboard — first-time orientation + studio tour
       image-generation/
-        skill.md           # Image generation workflow + model guide
-        references/
-          gpt-image-1.5.md
-          nano-banana-pro.md
-          nano-banana-2.md
-          flux-2-pro.md
-          recraft-v3.md
-          flux-schnell.md
+        SKILL.md           # /create-image — image generation & editing workflow
+        references/        # Per-model prompting guides
       video-generation/
-        skill.md           # Video generation workflow + model guide
-        references/
-          veo-3.1.md
-          sora-2-pro.md
-          kling-v3-pro.md
-          seedance-2.0.md
-          hailuo-02-pro.md
-          hailuo-2.3-fast.md
-          heygen-avatar-4.md
-      brand-theme/
-        skill.md           # Brand theme management workflow
+        SKILL.md           # /create-video — video generation workflow
+        references/        # Per-model prompting guides
+      create-html-image/
+        SKILL.md           # /create-html-image — HTML → PNG via headless Chromium
+      create-brand-theme/
+        SKILL.md           # /create-brand-theme — create, extract, update, and apply brand themes
 ```
 
 ---

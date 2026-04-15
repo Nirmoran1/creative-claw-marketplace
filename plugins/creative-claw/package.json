@@ -4,6 +4,9 @@
   "description": "Creative Claw plugin for Claude Code and OpenClaw",
   "type": "module",
   "main": "index.mjs",
+  "scripts": {
+    "version-sync": "../../scripts/version-sync.sh"
+  },
   "license": "Apache-2.0",
   "dependencies": {}
 }

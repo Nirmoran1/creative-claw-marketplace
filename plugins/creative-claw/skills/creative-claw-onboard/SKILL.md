@@ -1,6 +1,6 @@
 ---
 name: creative-claw-onboard
-description: Welcome + orientation for new Creative Claw users. A guided conversation — ask what they want to create, then help them think through how to build it with Creative Claw (images, videos, speech, HTML-rendered branded graphics, templates, themes, editing). References the deeper skills and the MCP tools available. Use when the user asks "what can I do with Creative Claw", "how does this work", "onboard me", "/creative-claw-onboard", or seems unsure what's available after installing the plugin.
+description: Welcome + orientation for new Creative Claw users. A guided conversation — ask what they want to create, then help them think through how to build it with Creative Claw (images, videos, speech, HTML-rendered branded graphics, templates, themes, editing). References the deeper skills and the MCP tools available. Use when the user asks "what can I do with Creative Claw", "how does this work", "onboard me", "/creative-claw-onboard", or seems unsure what's available after installing the plugin. (v0.2.5)
 tags:
   - onboarding
   - welcome

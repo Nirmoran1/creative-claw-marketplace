@@ -1,6 +1,6 @@
 ---
 name: create-brand-theme
-description: Create, extract, update, and apply Creative Claw brand themes. End-to-end workflow for onboarding a new brand from scratch (website, local folder, or direct URLs), extracting brand tokens (colors, fonts, logos, shapes, photography style), uploading named+tagged assets, and saving it as a theme — plus guidance for updating existing themes and baking theme data into image/video prompts. Use when the user asks to "create a theme", "set up brand X", "onboard a new brand", "extract brand from a website", "update our theme colors", or wants to render branded visuals for a company.
+description: Create, extract, update, and apply Creative Claw brand themes. End-to-end workflow for onboarding a new brand from scratch (website, local folder, or direct URLs), extracting brand tokens (colors, fonts, logos, shapes, photography style), uploading named+tagged assets, and saving it as a theme — plus guidance for updating existing themes and baking theme data into image/video prompts. Use when the user asks to "create a theme", "set up brand X", "onboard a new brand", "extract brand from a website", "update our theme colors", or wants to render branded visuals for a company. (v0.2.5)
 tags:
   - brand
   - theme

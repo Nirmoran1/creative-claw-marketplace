@@ -1,6 +1,6 @@
 ---
 name: create-html-image
-description: Render on-brand images from HTML/CSS via headless Chromium. Use when the user wants social cards, OG images, quote posts, hero banners, infographics, announcement cards, LinkedIn posts, or any layout-driven visual where typography, logo placement, and brand colors matter more than photoreal content. Supports the full browser CSS surface (grid, flex, filter, mask, clip-path, gradients, variable fonts, <style> blocks, inline SVG). Pulls colors/fonts/logos/assets from the user's saved brand theme so every render stays on-brand. Cheaper and more controllable than generate_image for anything typography- or layout-heavy.
+description: Render on-brand images from HTML/CSS via headless Chromium. Use when the user wants social cards, OG images, quote posts, hero banners, infographics, announcement cards, LinkedIn posts, or any layout-driven visual where typography, logo placement, and brand colors matter more than photoreal content. Supports the full browser CSS surface (grid, flex, filter, mask, clip-path, gradients, variable fonts, <style> blocks, inline SVG). Pulls colors/fonts/logos/assets from the user's saved brand theme so every render stays on-brand. Cheaper and more controllable than generate_image for anything typography- or layout-heavy. (v0.2.5)
 tags:
   - html
   - css

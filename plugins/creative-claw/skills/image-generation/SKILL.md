@@ -1,6 +1,6 @@
 ---
 name: create-image
-description: AI image generation and editing specialist. Helps users choose the right model, craft effective prompts, and generate or edit images using Creative Claw MCP tools.
+description: AI image generation and editing specialist. Helps users choose the right model, craft effective prompts, and generate or edit images using Creative Claw MCP tools. (v0.2.5)
 tags:
   - image
   - generate
