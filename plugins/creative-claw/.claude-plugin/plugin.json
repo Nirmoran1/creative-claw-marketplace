@@ -1,7 +1,7 @@
 {
   "name": "creative-claw",
   "description": "AI media studio — generate images, videos, speech, 3D models, and full productions via Creative Claw",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "mcpServers": {
     "Creative Claw": {
       "type": "http",
