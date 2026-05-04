@@ -1,6 +1,6 @@
 # MCP Tool Catalog
 
-All 40 tools the Creative Claw MCP server exposes. Grouped by purpose. Use this as a reference, not a recital list — never dump it on the user.
+All 41 tools the Creative Claw MCP server exposes. Grouped by purpose. Use this as a reference, not a recital list — never dump it on the user.
 
 ## Generation
 
@@ -59,6 +59,7 @@ All 40 tools the Creative Claw MCP server exposes. Grouped by purpose. Use this 
 | `extract_frames` | Pull stills from a video at specific timestamps |
 | `merge_media` | Concatenate clips, overlay audio, combine media |
 | `transcribe` | Audio → word-level transcript JSON (Scribe). Used by `edit-video` workflow. |
+| `isolate_audio` | Strip background noise, music, and reverb from a voice track via ElevenLabs Voice Isolator. Takes `audio_url` (must be a public URL — upload local files first). **Async.** Returns `jobId`; poll `check_job` for the cleaned audio URL. Used as the final audio polish in `edit-video`. |
 
 ## Models
 

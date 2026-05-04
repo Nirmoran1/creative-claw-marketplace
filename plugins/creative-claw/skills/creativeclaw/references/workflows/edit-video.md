@@ -132,7 +132,8 @@ When the user drops a `broll/` folder, treat it as a b-roll source set automatic
    Also sample first 2 s, last 2 s, and 2–3 mid-points — grade consistency, subtitle readability, overall coherence. Run `ffprobe` on the output to verify duration matches `total_duration_s`.
 
    If anything fails: fix → re-render → re-eval. **Cap at 3 self-eval passes.** If issues remain, flag them rather than looping.
-8. **Iterate + persist.** Natural-language feedback, re-plan, re-render. Never re-transcribe. On confirmation, do the final render. Append a section to `<edit>/project.md`.
+8. **Audio polish (optional, voice tracks only).** If the source audio sounds noisy — background hum, room reverb, traffic, music bleed, HVAC, keyboard clicks — offer voice isolation **before** the final render but **after** all cuts are locked. See "Voice isolation" below. Skip silently for clean studio audio or when the user explicitly wants ambient sound preserved.
+9. **Iterate + persist.** Natural-language feedback, re-plan, re-render. Never re-transcribe. On confirmation, do the final render. Append a section to `<edit>/project.md`.
 
 ## EDL — the single artifact
 
@@ -229,6 +230,42 @@ def ease_in_out_cubic(t):
 - Each prompt is self-contained (sub-agents have no parent context). Include: one-sentence goal, absolute output path, exact tech spec (resolution, fps, codec, pix_fmt, CRF, duration), style palette as concrete values, font path, frame-by-frame timeline, anti-list, deliverable checklist, and "Do not ask questions — pick the most obvious interpretation and proceed."
 - One sub-agent = one file (unique filenames; parallel agents don't overwrite).
 
+## Voice isolation (final audio polish)
+
+Use the MCP `isolate_audio` tool (ElevenLabs Voice Isolator) to strip background noise, music, and reverb from the voice track. This is the **last** audio step — run it after all cuts are locked and concatenated, never on raw source clips (that would invalidate the cached transcript).
+
+**When to suggest it:**
+- Audible background hum, traffic, HVAC, keyboard clicks, room reverb, or music bleed in the talking-head track
+- User flags audio quality as a concern
+- Repurposing field-recorded footage (phone, on-location, untreated room)
+
+**When NOT to use it:**
+- Clean studio / lavalier / treated-room audio — isolation can introduce artifacts on already-clean tracks
+- The ambient sound is **part of the piece** (concert, street scene, ASMR, environmental documentary)
+- B-roll-only or music-driven segments with no voice
+
+**Always confirm with the user first.** It costs credits and changes the sonic character. Frame it like: *"The room tone on this is pretty noisy — want me to run voice isolation as a final pass? It'll strip the background but the voice will sound a bit drier."* Wait for yes before running.
+
+**How to apply (final step, after cuts are locked):**
+
+1. After `render.py` produces the cut video (with concatenated audio, fades, but **before** subtitles burn-in is locked as final), extract the audio track:
+   ```bash
+   ffmpeg -y -i <cut>.mp4 -vn -c:a pcm_s16le <edit>/audio_pre_isolation.wav
+   ```
+2. Upload via `upload_asset` (small) or `get_upload_url` → PUT → `confirm_upload` (large). Tag `["video-use", "<project>", "pre-isolation"]`.
+3. Call `isolate_audio({ audio_url: "<R2 URL>" })`. Returns `jobId`.
+4. Poll `check_job` until `status === "completed"`. Typical: 20 s – 2 min depending on length.
+5. Download the cleaned audio URL to `<edit>/audio_isolated.wav`.
+6. Mux back into the cut video (video stream untouched, audio replaced):
+   ```bash
+   ffmpeg -y -i <cut>.mp4 -i <edit>/audio_isolated.wav \
+     -map 0:v -map 1:a -c:v copy -c:a aac -b:a 192k <edit>/cut_isolated.mp4
+   ```
+7. Re-apply subtitles burn-in over `cut_isolated.mp4` (Hard Rule 1 still holds — subtitles last).
+8. Self-eval: spot-check 2–3 segments for unnatural artifacts, lisp/sibilance damage, or over-aggressive cleanup. If isolation made it worse, fall back to the pre-isolation cut and tell the user.
+
+**Why audio-only and not the whole video?** `isolate_audio` only accepts audio URLs, and decoupling it lets you keep the locked picture/cut intact while swapping just the audio track — no re-encode of video, no risk to overlays or grade.
+
 ## Smart vertical reframe
 
 `smart_vertical.py <in> -o <out>` reframes 16:9 → 1080×1920 driven by face tracking. Use when the user wants to repurpose landscape footage as TikTok / Reels / Shorts. Tracks face centers every N frames, smooths the trajectory, single ffmpeg pass with `crop` driven by sendcmd.
@@ -261,10 +298,14 @@ On startup, read `project.md` if it exists and summarize the last session in one
 - **Re-transcribing cached sources.** Immutable outputs of immutable inputs.
 - **Falling back to direct ElevenLabs calls.** If Creative Claw `transcribe` is unavailable, stop and tell the user.
 - **Assuming what kind of video it is.** Look first, ask second, edit last.
+- **Running `isolate_audio` on raw source clips or before cuts are locked.** Always operate on the final concatenated audio, after cuts. Otherwise you waste credits and risk invalidating the transcript cache.
+- **Running `isolate_audio` without asking.** Costs credits and changes sonic character — confirm with the user before submitting.
+- **Running `isolate_audio` on already-clean studio audio.** It introduces artifacts on tracks that don't need it.
 
 ## MCP tools used here
 
 **Transcription** — `transcribe`, `check_job`, `upload_asset` (or `get_upload_url` + `confirm_upload`)
+**Audio polish** — `isolate_audio` (final pass, voice-only tracks; ask user first)
 **Editing** — `trim_video`, `scale_video`, `merge_media`, `add_subtitles`, `extract_frames`, `remove_background` (when needed)
 **Assets** — `search_assets`, `update_asset`, `import_media`
 **Credits** — `get_credits_balance` (transcription burns credits)
