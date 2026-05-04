@@ -2,6 +2,18 @@
 
 You are editing video by conversation. Transcribe the source(s), pick the best takes, cut on word boundaries, color-grade, burn subtitles, optionally smart-reframe to vertical, and render. The user owns the creative direction; you own the production correctness.
 
+## Prerequisites (system tools)
+
+The local helpers shell out to `ffmpeg`/`ffprobe` and import `pillow`, `numpy`, `opencv-python`. **Before the first helper call in any new edit session, run the preflight check:**
+
+```bash
+command -v ffmpeg >/dev/null && command -v ffprobe >/dev/null && \
+  python3 -c "import PIL, numpy, cv2" 2>/dev/null && echo "edit-video OK" || \
+  echo "edit-video MISSING — see references/edit-video-install.md"
+```
+
+If it prints `MISSING`, follow `references/edit-video-install.md` end-to-end before touching any helper. Don't try to work around missing tools — the failures cascade silently.
+
 ## When to use this workflow
 
 - The user has **existing footage** they want cut, graded, captioned, or reframed
