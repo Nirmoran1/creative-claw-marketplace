@@ -1,0 +1,28 @@
+{
+  "$schema": "platform-dimensions/v1",
+  "static": {
+    "open_graph": { "width": 1200, "height": 630, "aspect": "1.91:1" },
+    "open_graph_medium": { "width": 1500, "height": 750, "aspect": "2:1" },
+    "linkedin_square_large": { "width": 1200, "height": 1200, "aspect": "1:1" },
+    "linkedin_square": { "width": 1080, "height": 1080, "aspect": "1:1" },
+    "linkedin_cover": { "width": 1584, "height": 396, "aspect": "4:1", "notes": "no text in outer 10%" },
+    "twitter_post": { "width": 1600, "height": 900, "aspect": "16:9" },
+    "instagram_square": { "width": 1080, "height": 1080, "aspect": "1:1" },
+    "instagram_story": { "width": 1080, "height": 1920, "aspect": "9:16", "safe_zone_top_px": 150, "safe_zone_bottom_px": 150 },
+    "youtube_thumbnail": { "width": 1280, "height": 720, "aspect": "16:9" },
+    "facebook_cover": { "width": 1200, "height": 630, "aspect": "1.91:1" },
+    "hero_banner": { "width": 1920, "height": 1080, "aspect": "16:9" },
+    "email_header": { "width": 600, "height": 200, "aspect": "3:1" },
+    "favicon": { "width": 512, "height": 512, "aspect": "1:1" },
+    "app_icon": { "width": 1024, "height": 1024, "aspect": "1:1" }
+  },
+  "video": {
+    "tiktok": { "width": 1080, "height": 1920, "aspect": "9:16", "fps": 30, "duration_min_s": 15, "duration_max_s": 60, "hook_window_s": 3 },
+    "instagram_reels": { "width": 1080, "height": 1920, "aspect": "9:16", "fps": 30, "duration_min_s": 15, "duration_max_s": 30, "safe_zone_bottom_px": 250 },
+    "youtube_shorts": { "width": 1080, "height": 1920, "aspect": "9:16", "fps": 30, "duration_min_s": 15, "duration_max_s": 60, "safe_zone_bottom_px": 200 },
+    "youtube_standard": { "width": 1920, "height": 1080, "aspect": "16:9", "fps": 30 },
+    "youtube_cinematic": { "width": 1920, "height": 1080, "aspect": "16:9", "fps": 24 },
+    "square_social_video": { "width": 1080, "height": 1080, "aspect": "1:1", "fps": 30 },
+    "uhd_cinematic": { "width": 3840, "height": 2160, "aspect": "16:9", "fps": 24 }
+  }
+}

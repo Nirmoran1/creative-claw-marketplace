@@ -3,3 +3,8 @@ node_modules/
 *.log
 CLAUDE.md
 .claude/settings.local.json
+_refs/
+.agents/
+.claude/
+.factory/
+skills-lock.json

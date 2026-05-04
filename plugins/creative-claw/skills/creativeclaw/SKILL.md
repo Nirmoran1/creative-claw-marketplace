@@ -1,26 +1,15 @@
 ---
 name: creativeclaw
-description: Creative Claw AI media studio — generate images, videos, speech, branded graphics, and manage brand themes. Routes your request to the right MCP workflow and loads model-specific guides on demand. Requires the Creative Claw MCP server to be connected.
-tags:
-  - image
-  - video
-  - banner
-  - reel
-  - brand
-  - theme
-  - html
-  - media
-  - creative
-arguments: []
+description: Creative Claw AI media studio — the unified creative pipeline for AI-generated and code-driven media. Use when the user wants to (1) generate or edit an AI image (FLUX, Nano Banana, GPT Image, Recraft), (2) generate or edit an AI video clip (Veo, Sora, Kling, Hailuo, Seedance, HeyGen avatars), (3) generate speech, voiceover, or voice-cloned audio, (4) render a branded HTML graphic to PNG (social cards, OG images, quote cards, stat cards, announcements, banners), (5) render a branded code-driven video to MP4 via HyperFrames + GSAP (kinetic typography, animated logos, data viz, branded title cards, content series), (6) build, save, list, or render reusable templates with parameters (repeatable LinkedIn / IG / OG / story posts), (7) create, extract from a website, update, or apply a brand theme (colors, fonts, logos, shapes, photography style), (8) edit existing video footage end-to-end — transcribe, cut on word boundaries, color grade, burn subtitles, reframe vertical, merge clips, smart 9:16 reframe, (9) onboard a new user to the studio, or (10) manage assets (search, tag, upload, import). Routes to deep references in this skill and calls the Creative Claw MCP server's tools (generate_image, generate_video, generate_speech, render_html_image, render_html_video, render_template, get_theme, transcribe, check_job, search_assets, plus ~30 more). Requires the Creative Claw MCP server to be connected. (v0.4.0)
 ---
 
 # Creative Claw
 
-AI media studio running via MCP. Generate images, videos, speech, branded HTML graphics, and manage brand themes — all through one server connected to 1,000+ AI models.
+The unified AI media studio. Generates images, videos, speech, and branded graphics through one MCP server with 40 tools and one shared asset library. This skill is the **single source of truth** for every workflow — the MCP server provides the tools, this skill provides the knowledge.
 
 ## Prerequisite
 
-This skill requires the **Creative Claw MCP server** to be connected. If tools like `generate_image`, `generate_video`, `render_html_image` are not available, the user needs to connect first:
+The **Creative Claw MCP server** must be connected. If `generate_image`, `render_html_image`, `get_theme` etc. aren't available, install:
 
 ```
 /plugin install creative-claw@creative-claw-marketplace
@@ -28,162 +17,88 @@ This skill requires the **Creative Claw MCP server** to be connected. If tools l
 
 Or connect the MCP directly: `https://app.creativeclaw.co/mcp`
 
-## How to Use the MCP Server's Knowledge
+## Principles
 
-The Creative Claw MCP server ships its own **prompts** (full workflow guides) and **resources** (per-model prompting guides). You MUST load these into context before doing any generation work. They contain the detailed workflows, model selection, prompting strategies, and anti-patterns — do not guess or improvise.
+1. **Theme-first.** If the user has a brand, every generation pulls from it. Call `get_theme` before any branded work. No theme + branded request → run the brand-theme workflow before generating.
+2. **The right engine for the job.** Layout-driven content (text, logos, repeatable cards) → HTML render or template. Photoreal content (people, scenes, products) → AI model with a reference image. Code-driven motion (kinetic type, branded animation) → HyperFrames. Existing footage (cut, grade, subtitle) → edit-video workflow.
+3. **Reference images keep AI on-brand.** Never run `generate_image` or `generate_video` for branded work without an `image_url` anchor — without it, models drift off-brand regardless of prompt quality.
+4. **Async means async.** `generate_video` and `render_html_video` return job IDs. Always poll `check_job`. Never claim a result without `status === "completed"`.
+5. **Assets are forever.** Every result lives at a permanent R2 URL. Tag and name everything (`update_asset`) so future-you can find it (`search_assets`).
 
-### Step 1: Load the right MCP prompt
+## Hard rules (non-negotiable)
 
-MCP prompts are the workflow guides. When the user asks to do something, **invoke the matching MCP prompt** to load the full workflow into context. The server name is `Creative Claw`.
+1. **Always `get_theme` first** for any branded generation. Skip only if the user has explicitly said "ignore my brand."
+2. **Always generate a reference image before any AI video.** Even text-to-video. The starting frame controls quality and on-brandness.
+3. **`render_html_image`: never raw external URLs in `<img src>` or `background-image: url()`.** Always use `inline_images` — substituted as data URIs through the SSRF-guarded cache. CORS, redirects, and expired CDN URLs are the #1 cause of broken renders.
+4. **Async tools require `check_job`.** `generate_video`, `render_html_video`, `generate_3d_model`, `transcribe` all return `{ jobId, status: "queued" }`. Poll until completion. See `references/async-jobs.md`.
+5. **HyperFrames: no `repeat: -1`, no async timeline construction.** See `references/hyperframes-primer.md` for the full rule list.
+6. **Edit-video: subtitles last in the filter chain.** Overlays applied first, subtitles last — otherwise overlays hide captions.
+7. **Edit-video: cache transcripts per source.** Same source file → same JSON. Never re-transcribe.
+8. **Edit-video: cut only on word boundaries** from the transcript. Pad cut edges 30–200 ms.
+9. **Tag and name assets at generation time.** Pass `name` and `tags` to every `generate_*` / `render_*` call. Use `update_asset` after if you forgot.
+10. **Don't quote pricing from memory.** Use `get_credits_balance` for the user's balance. Hand them `get_credits_link` for top-up — you cannot complete checkout for them.
 
-| User wants to... | MCP Prompt to invoke |
+## Routing
+
+| User wants… | Read first |
 |---|---|
-| Generate or edit an image | `create-image` |
-| Generate a video clip | `create-video` |
-| Render a branded graphic from HTML/CSS | `create-html-image` |
-| Create or manage a brand theme | `create-brand-theme` |
-| Build a programmatic video with Remotion | `create-video-remotion` |
-| Get oriented / "what can I do?" / onboard me | `onboard` |
+| Orientation / "what can this do?" | `references/workflows/onboard.md` |
+| Generate or edit an AI image | `references/workflows/image-gen.md` + `references/models/image/<model>.md` |
+| Generate or edit an AI video | `references/workflows/video-gen.md` + `references/models/video/<model>.md` |
+| Voiceover / TTS / voice cloning | `references/workflows/video-gen.md` (audio section) + `references/models/speech/<model>.md` |
+| Branded HTML → PNG (one-off banner / OG / card) | `references/workflows/html-image.md` + `references/platform-dimensions.md` |
+| Reusable banner template (many renders, swap data) | `references/workflows/banner-from-template.md` |
+| Code-driven branded video (HyperFrames) | `references/workflows/code-video-hyperframes.md` + `references/hyperframes-primer.md` |
+| Brand theme (create / extract / update / apply) | `references/workflows/brand-theme.md` |
+| Edit existing footage (cut / grade / subtitle / reframe) | `references/workflows/edit-video.md` (uses `helpers/`) |
 
-### Step 2: Load the model-specific guide
+When the user's request matches a row, **read that file before doing anything**. The workflow files contain the model selection, prompting strategies, parameter sets, and anti-patterns that aren't reproduced here.
 
-Before crafting any generation prompt, read the model's prompting guide using `ReadMcpResourceTool` with server `Creative Claw`. These guides contain the exact prompt structure, keywords, and pitfalls for each model.
+## References index
 
-**Discover all available guides:**
-```
-ListMcpResourcesTool(server: "Creative Claw")
-```
+### Workflows (`references/workflows/`)
+- **onboard.md** — first-time tour. The mission, four playful first-generations, the brand-theme unlock, recipes per goal.
+- **image-gen.md** — AI image generation. Model selection (Nano Banana, FLUX, GPT Image, Recraft), prompting per model, editing vs. generating, branded vs. unbranded.
+- **video-gen.md** — AI video generation. Model selection (Veo, Sora, Kling, Hailuo, Seedance, HeyGen), reference-image-first rule, async polling, multi-segment planning.
+- **html-image.md** — `render_html_image` deep dive. Full CSS surface, `inline_images`, fonts, dimensions, theme integration, when to use vs. AI gen.
+- **banner-from-template.md** — Save-once-render-many flow with `create_template` / `render_template`. Parameter design, batch rendering, the four templates worth building first.
+- **code-video-hyperframes.md** — `render_html_video` workflow. Asset gen → composition → render → iterate. Common patterns (branded series, AI clip + chrome overlay, data viz, talking avatar, product demo).
+- **brand-theme.md** — full theme lifecycle. Website extraction, local folders, URL lists, generating from scratch, updating, applying in generation.
+- **edit-video.md** — edit existing footage end-to-end. Transcribe via Creative Claw, cut on word boundaries, color grade, burn subtitles, smart 9:16 reframe. Uses Python helpers in `helpers/` and the EDL artifact in `assets/edl-schema.json`.
 
-**Read a specific guide:**
-```
-ReadMcpResourceTool(server: "Creative Claw", uri: "creative-claw://guides/video/seedance-2.0")
-```
+### Model guides (`references/models/`)
+Per-model prompting guides — read **before** crafting any `generate_image` / `generate_video` / `generate_speech` prompt:
+- **image/** — flux-2-pro, flux-schnell, gpt-image-2, nano-banana-2, nano-banana-pro, recraft-v3
+- **video/** — hailuo-02-pro, hailuo-2.3-fast, heygen-avatar-4, kling-v3-pro, seedance-2.0, sora-2-pro, veo-3.1
+- **speech/** — xai-tts
 
-Known guides at time of writing:
+### Cross-cutting (`references/`)
+- **hyperframes-primer.md** — minimum HyperFrames knowledge. Capture contract, hard rules, layout-before-animation, scene transitions, fonts.
+- **tool-catalog.md** — all 40 MCP tools, grouped (generation, templates, themes, assets, editing, models, jobs, credits).
+- **async-jobs.md** — `check_job` polling pattern, parallel jobs, failure modes, timeouts.
+- **platform-dimensions.md** — IG, LI, X, YT, TikTok, OG sizes + safe zones. Machine-readable copy at `assets/platform-dimensions.json`.
 
-**Image models:**
-- `creative-claw://guides/image/flux-2-pro`
-- `creative-claw://guides/image/flux-schnell`
-- `creative-claw://guides/image/gpt-image-1.5`
-- `creative-claw://guides/image/nano-banana-2`
-- `creative-claw://guides/image/nano-banana-pro`
-- `creative-claw://guides/image/recraft-v3`
+### Assets (`assets/`)
+- **platform-dimensions.json** — JSON copy of dimensions table.
+- **edl-schema.json** — JSON schema for the Edit Decision List (edit-video workflow).
 
-**Video models:**
-- `creative-claw://guides/video/hailuo-02-pro`
-- `creative-claw://guides/video/hailuo-2.3-fast`
-- `creative-claw://guides/video/heygen-avatar-4`
-- `creative-claw://guides/video/kling-v3-pro`
-- `creative-claw://guides/video/seedance-2.0`
-- `creative-claw://guides/video/sora-2-pro`
-- `creative-claw://guides/video/veo-3.1`
+### Helpers (`helpers/`)
+Python scripts for the edit-video workflow:
+- **prepare_audio.py** — extract mono 16 kHz WAV from a video for the Creative Claw `transcribe` tool. Cached against the transcript file.
+- **pack_transcripts.py** — Scribe JSONs → `takes_packed.md` (phrase-level reading view).
+- **timeline_view.py** — filmstrip + waveform PNG for a time range. Use at decision points only.
+- **render.py** — full render pipeline (per-segment extract → concat → overlays → subtitles). Reads `edl.json`.
+- **grade.py** — color grade via ffmpeg filter chain. Auto mode by default; presets and raw filters available.
+- **smart_vertical.py** — face-tracked 16:9 → 1080×1920 reframe.
 
-New guides may be added to the server — always run `ListMcpResourcesTool` to discover the latest.
+## Tool catalog quick reference
 
-### Step 3: Check the brand theme
+Full details and grouping in `references/tool-catalog.md`. Common ones:
 
-If the user has a brand, call `get_theme` before any generation. The theme contains colors, fonts, logos, and style tokens that should inform every prompt and render.
-
-## Use-Case Routing
-
-### "Make me a banner / social card / OG image"
-1. Invoke MCP prompt: `create-html-image` (for layout-driven) or `create-image` (for photorealistic)
-2. Load brand theme with `get_theme`
-3. Platform dimensions:
-
-| Platform | Size | Notes |
-|---|---|---|
-| Instagram Post | 1080x1080 | Center-weighted |
-| Instagram Story | 1080x1920 | 150px safe zone top/bottom |
-| LinkedIn Post | 1200x627 | |
-| LinkedIn Banner | 1584x396 | No text in outer 10% |
-| Twitter/X Post | 1600x900 | |
-| YouTube Thumbnail | 1280x720 | Bold text, high contrast |
-| Facebook Cover | 1200x630 | |
-| OG Image | 1200x630 | |
-| Email Header | 600x200 | |
-
-**When to use which tool:**
-- Typography, quotes, stats, announcements, badges → `render_html_image`
-- Photorealistic scenes, artistic imagery → `generate_image`
-- AI background + branded text overlay → `generate_image` first, then `render_html_image` with it via `inline_images`
-
-### "Make me a TikTok / Reel / Short"
-1. Invoke MCP prompt: `create-video`
-2. Read the model guide for the chosen video model
-3. Platform specs:
-
-| Platform | Aspect | Optimal duration | Notes |
-|---|---|---|---|
-| TikTok | 9:16 | 15-60s | Hook in first 1-3s |
-| Instagram Reels | 9:16 | 15-30s | 250px safe zone at bottom |
-| YouTube Shorts | 9:16 | 15-60s | Title overlay at bottom |
-
-**Reel structure:** Hook (0-3s) → Body (2-4 segments, 3-20s) → CTA (last 2-3s)
-
-**Formats:** Product showcase, before/after, tutorial, testimonial, montage.
-
-**Workflow:** Plan segments → generate reference image per segment → generate video clips → `add_subtitles` → `generate_speech` or upload audio → `merge_media`.
-
-### "Make assets for my landing page"
-1. Invoke MCP prompts: `create-image` AND `create-html-image` (you'll use both)
-2. Load brand theme
-3. Asset checklist:
-
-| Asset | Tool | Size |
-|---|---|---|
-| Hero image | `generate_image` | 1920x1080 |
-| Hero + text overlay | `generate_image` → `render_html_image` | 1920x1080 |
-| OG / social share | `render_html_image` | 1200x630 |
-| Feature illustrations | `generate_image` (same model for consistency) | 800x800 |
-| Section backgrounds | `generate_image` | 1920x1080 |
-| Product shots (cutout) | `remove_background` | varies |
-| Testimonial cards | `render_html_image` | 600x400 |
-| Favicon | `generate_image` | 512x512 |
-
-**Style consistency:** Use ONE model for all illustrations. Same style prefix in every prompt. Pass a reference image via `image_url` to maintain consistency across a set.
-
-### "Set up my brand / create a theme"
-1. Invoke MCP prompt: `create-brand-theme`
-2. Follow the workflow in the prompt — it covers website extraction, local folders, URL lists, and generating from scratch
-
-### "Build a motion video / animated video with Remotion"
-1. Invoke MCP prompt: `create-video-remotion`
-2. Generate assets with `generate_image`, `render_html_image`, `generate_speech`
-3. Follow the Remotion workflow in the prompt
-
-### "Make me an image / edit this image"
-1. Invoke MCP prompt: `create-image`
-2. Read the guide for the chosen model
-3. Follow the workflow in the prompt
-
-### "Make me a video"
-1. Invoke MCP prompt: `create-video`
-2. Read the guide for the chosen model
-3. Follow the workflow in the prompt — always generate a reference image first
-
-### "What can Creative Claw do?" / "Onboard me"
-1. Invoke MCP prompt: `onboard`
-2. Follow the onboarding conversation flow
-
-## Key Tools Quick Reference
-
-**Generate:** `generate_image`, `generate_video`, `generate_speech`, `render_html_image`, `compare_models`
-**Edit:** `remove_background`, `upscale_media`, `trim_video`, `scale_video`, `add_subtitles`, `extract_frames`, `merge_media`
-**Brand:** `get_theme`, `update_theme`, `list_themes`
-**Templates:** `create_template`, `render_template`, `list_templates`
-**Assets:** `search_assets`, `upload_asset`, `import_media`, `update_asset`
-**Jobs:** `check_job` (poll async jobs until complete)
-**Credits:** `get_credits_balance`, `get_credits_link`
-**View:** `load_image` (display an image inline)
-
-## Important Patterns
-
-- **Load the MCP prompt first.** The prompts contain the real workflow knowledge. This skill just routes you there.
-- **Read the model guide before prompting.** Every model has different prompt structure and keywords.
-- **Discover resources dynamically.** Run `ListMcpResourcesTool(server: "Creative Claw")` — new guides are added regularly.
-- **Always generate a reference image before video.** The `create-video` prompt explains why.
-- **Always use `inline_images` in `render_html_image`.** Never raw external URLs in `<img>` tags.
-- **Always check brand theme first** if the user has a brand.
-- **Video generation is async.** `generate_video` returns a job ID → poll with `check_job`.
-- **Name and tag assets** with `update_asset` after generation — makes them searchable later.
+**Generate** — `generate_image`, `generate_video`, `generate_speech`, `render_html_image`, `render_html_video`, `render_template`, `compare_models`
+**Edit** — `remove_background`, `upscale_media`, `trim_video`, `scale_video`, `add_subtitles`, `extract_frames`, `merge_media`, `transcribe`
+**Brand** — `get_theme`, `list_themes`, `update_theme`
+**Templates** — `create_template`, `render_template`, `list_templates`, `update_template`
+**Assets** — `search_assets`, `update_asset`, `upload_asset`, `import_media`, `load_image`
+**Jobs** — `check_job` (poll all async generations)
+**Credits** — `get_credits_balance`, `get_credits_link`
