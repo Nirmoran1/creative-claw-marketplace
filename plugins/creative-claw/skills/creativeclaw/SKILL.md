@@ -47,7 +47,8 @@ Or connect the MCP directly: `https://app.creativeclaw.co/mcp`
 | Generate or edit an AI video | `references/workflows/video-gen.md` + `references/models/video/<model>.md` |
 | Voiceover / TTS / voice cloning | `references/workflows/video-gen.md` (audio section) + `references/models/speech/<model>.md` |
 | Branded HTML → PNG (one-off banner / OG / card) | `references/workflows/html-image.md` + `references/platform-dimensions.md` |
-| Reusable banner template (many renders, swap data) | `references/workflows/banner-from-template.md` |
+| **Create a new template** (HTML or AI-image, with refs + iteration loop) | `references/workflows/template-creation.md` |
+| Reusable banner template (deeper HTML template mechanics) | `references/workflows/banner-from-template.md` |
 | Code-driven branded video (HyperFrames) | `references/workflows/code-video-hyperframes.md` + `references/hyperframes-primer.md` |
 | Brand theme (create / extract / update / apply) | `references/workflows/brand-theme.md` |
 | Edit existing footage (cut / grade / subtitle / reframe) | `references/workflows/edit-video.md` (uses `helpers/`) |
@@ -61,7 +62,8 @@ When the user's request matches a row, **read that file before doing anything**.
 - **image-gen.md** — AI image generation. Model selection (Nano Banana, FLUX, GPT Image, Recraft), prompting per model, editing vs. generating, branded vs. unbranded.
 - **video-gen.md** — AI video generation. Model selection (Veo, Sora, Kling, Hailuo, Seedance, HeyGen), reference-image-first rule, async polling, multi-segment planning.
 - **html-image.md** — `render_html_image` deep dive. Full CSS surface, `inline_images`, fonts, dimensions, theme integration, when to use vs. AI gen.
-- **banner-from-template.md** — Save-once-render-many flow with `create_template` / `render_template`. Parameter design, batch rendering, the four templates worth building first.
+- **template-creation.md** — Create a new template (both flavors: HTML render-templates AND AI-image prompt templates). Reference-image collection (existing files, URLs, or `import_media` drop-in), analysis, minimal dynamic params, render → load → iterate loop, prompt recipes for AI-generated background images inside HTML templates, "render one now" handoff.
+- **banner-from-template.md** — Deeper HTML template mechanics: full HTML example, `create_template` parameter shape, batch rendering, the four templates worth building first.
 - **code-video-hyperframes.md** — `render_html_video` workflow. Asset gen → composition → render → iterate. Common patterns (branded series, AI clip + chrome overlay, data viz, talking avatar, product demo).
 - **brand-theme.md** — full theme lifecycle. Website extraction, local folders, URL lists, generating from scratch, updating, applying in generation.
 - **edit-video.md** — edit existing footage end-to-end. Transcribe via Creative Claw, cut on word boundaries, color grade, burn subtitles, smart 9:16 reframe. Uses Python helpers in `helpers/` and the EDL artifact in `assets/edl-schema.json`.
